@@ -8,6 +8,15 @@ import android.graphics.Path;
  */
 public class Sine {
     private float frequency;
+
+    public void setAmplitude(float amplitude) {
+        this.amplitude = amplitude;
+    }
+
+    public void setFrequency(float frequency) {
+        this.frequency = frequency;
+    }
+
     private float amplitude;
     private int waveColor;
     private Path path;

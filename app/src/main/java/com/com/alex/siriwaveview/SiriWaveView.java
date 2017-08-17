@@ -14,17 +14,30 @@ import com.example.root.audiovisualizer.R;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.R.attr.maxLevel;
+
 /**
  * Created by Alex on 6/25/2016.
- * Edited By Alnour Ahmed Khalifa
+ * Edited By Alnour Ahmed Khalifa on 17/8/2017 in order to add different sine waves
+ *
  */
 public class SiriWaveView extends View {
 
-    private Path mPath;
-    private Paint mPaint;
+    private float maxSineAmp;
 
     public void setSines(List<Sine> mSines) {
         this.mSines = mSines;
+        setMaxAmplitude(mSines);
+    }
+
+    private void setMaxAmplitude(List<Sine> mSines) {
+        if(!this.mSines.isEmpty()) {
+            maxSineAmp = this.mSines.get(0).getAmplitude();
+            for (Sine sine : mSines) {
+                if (sine.getAmplitude() > maxSineAmp)
+                    maxSineAmp = sine.getAmplitude();
+            }
+        }
     }
 
     List<Sine> mSines = new ArrayList<>();
@@ -37,9 +50,7 @@ public class SiriWaveView extends View {
     private float waveHeight;
     private float waveVerticalPosition = 2;
     private int waveColor;
-    private float phase;
-    private float amplitude;
-    private float level = 1.0f;
+
 
     ObjectAnimator mAmplitudeAnimator;
 
@@ -71,13 +82,6 @@ public class SiriWaveView extends View {
         waveColor = a.getColor(R.styleable.SiriWaveView_waveColor, waveColor);
         waveVerticalPosition = a.getFloat(R.styleable.SiriWaveView_waveVerticalPosition, waveVerticalPosition);
         waveNumber = a.getInteger(R.styleable.SiriWaveView_waveAmount, waveNumber);
-
-        mPath = new Path();
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(2);
-        mPaint.setColor(waveColor);
-
         a.recycle();
         initAnimation();
     }
@@ -95,81 +99,43 @@ public class SiriWaveView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         for(Sine sine : mSines){
-            mPaint.setColor(sine.getWaveColor());
-            canvas.drawPath(sine.getPath(), mPaint);
+            sine.getPaint().setColor(sine.getWaveColor());
+            canvas.drawPath(sine.getPath(), sine.getPaint());
             updatePath(sine);
+            invalidate();
+
         }
-        canvas.drawPath(mPath, mPaint);
-        updatePath();
+
     }
 
     private void updatePath(Sine sine) {
         sine.getPath().reset();
         sine.setPhase(sine.getPhase() + phaseShift);
-        amplitude = Math.max(level, sine.getAmplitude());
 
-            float halfHeight = getHeight() / waveVerticalPosition;
-            float width = getWidth();
-            float midWidth = width / 2.0f;
+        float halfHeight = getHeight() / waveVerticalPosition;
+        float width = getWidth();
+        float midWidth = width / 2.0f;
 
-            float maxAmplitude = halfHeight - (halfHeight - waveHeight);
+        float maxAmplitude = halfHeight - (halfHeight - waveHeight);
+        float amplitude = sine.getAmplitude() * maxAmplitude / maxSineAmp;
 
 
-            for (int x = 0; x < width; x++) {
-                float scaling = (float) (-Math.pow(1 / midWidth * (x - midWidth), 2) + 1);
 
-                float y = (float) (scaling * maxAmplitude  * Math.sin(2 * Math.PI * (x / width) * sine.getFrequency() + sine.getPhase() + initialPhaseOffset) + halfHeight);
+        for (int x = 0; x < width; x++) {
+            float scaling = (float) (-Math.pow(1 / midWidth * (x - midWidth), 2) + 1);
 
-                if (x == 0) {
-                    sine.getPath().moveTo(x, y);
-                } else {
-                    sine.getPath().lineTo(x, y);
-                }
-            }
-    }
+            float y = (float) (scaling * amplitude  * Math.sin(2 * Math.PI * (x / width) * sine.getFrequency() + sine.getPhase() + initialPhaseOffset) + halfHeight);
 
-    private void updatePath() {
-        mPath.reset();
-
-        phase += phaseShift;
-        amplitude = Math.max(level, IdleAmplitude);
-
-        for (int i = 0; i < waveNumber; i++) {
-            float halfHeight = getHeight() / waveVerticalPosition;
-            float width = getWidth();
-            float midWidth = width / 2.0f;
-
-            float maxAmplitude = halfHeight - (halfHeight - waveHeight);
-
-            // Progress is a value between 1.0 and -0.5, determined by the current wave idx,
-            // which is used to alter the wave's amplitude.
-            float progress = 1.0f - (float) i / waveNumber;
-            float normedAmplitude = (1.5f * progress - 0.5f) * amplitude;
-
-            for (int x = 0; x < width; x++) {
-                float scaling = (float) (-Math.pow(1 / midWidth * (x - midWidth), 2) + 1);
-
-                float y = (float) (scaling * maxAmplitude * normedAmplitude * Math.sin(2 * Math.PI * (x / width) * frequency + phase + initialPhaseOffset) + halfHeight);
-
-                if (x == 0) {
-                    mPath.moveTo(x, y);
-                } else {
-                    mPath.lineTo(x, y);
-                }
+            if (x == 0) {
+                sine.getPath().moveTo(x, y);
+            } else {
+                sine.getPath().lineTo(x, y);
             }
         }
-
-        //mPath.close();
     }
 
-    private void setAmplitude(float amplitude) {
-        this.amplitude = amplitude;
-        invalidate();
-    }
 
-    private float getAmplitude() {
-        return this.amplitude;
-    }
+
 
     public void stopAnimation() {
         if (mAmplitudeAnimator != null) {
@@ -185,13 +151,4 @@ public class SiriWaveView extends View {
         }
     }
 
-    public void setWaveColor(int waveColor) {
-        mPaint.setColor(waveColor);
-        invalidate();
-    }
-
-    public void setStrokeWidth(float strokeWidth) {
-        mPaint.setStrokeWidth(strokeWidth);
-        invalidate();
-    }
 }

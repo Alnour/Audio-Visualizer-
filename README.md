@@ -22,7 +22,7 @@ MVP Design Pattern is adopted in this project
 each user scenario has its own package which contains a contractor that links the view with presenter.
 Then there is a presenter class that implements the presenter interface.
 Views are implemented by activites and models are separated in their own package.
-Two users stories has been added here : the main story and the settigs story.
+Two user stories has been added here : the main story and the settings story.
 
 
 ## Next Feature

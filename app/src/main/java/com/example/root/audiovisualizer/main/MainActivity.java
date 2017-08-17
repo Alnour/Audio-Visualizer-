@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements MainContractor.Vi
     @Override
     protected void onResume() {
         presenter.getSettings();
+        super.onResume();
     }
 
     @Override

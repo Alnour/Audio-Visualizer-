@@ -102,8 +102,8 @@ public class RecordingService extends AsyncTask<Void, Double, Void> {
             magnitudes[i/2] = Math.sqrt(freq[i] * freq[i] + freq[i+1] * freq[i+1]);
         }
         int tenPercEndIndex = (int) (0.1 * n);
-        int next30PercEndIndex = (int) (0.2*n + tenPercEndIndex);
-        int next40PercEndIndex = (int) (0.2*n + next30PercEndIndex);
+        int next30PercEndIndex = (int) (0.3*n + tenPercEndIndex);
+        int next40PercEndIndex = (int) (0.4*n + next30PercEndIndex);
         result.add(getNPercentValues(baseBandFreq, magnitudes, 0, tenPercEndIndex));
         result.add(getNPercentValues(baseBandFreq, magnitudes, tenPercEndIndex, next30PercEndIndex));
         result.add(getNPercentValues(baseBandFreq, magnitudes, next30PercEndIndex, next40PercEndIndex));

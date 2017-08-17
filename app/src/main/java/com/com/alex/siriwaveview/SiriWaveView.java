@@ -32,8 +32,10 @@ public class SiriWaveView extends View {
 
     private void setMaxAmplitude(List<Sine> mSines) {
         if(!this.mSines.isEmpty()) {
-            maxSineAmp = this.mSines.get(0).getAmplitude();
+            maxSineAmp = 0;
             for (Sine sine : mSines) {
+                if(!sine.isShown())
+                    continue;
                 if (sine.getAmplitude() > maxSineAmp)
                     maxSineAmp = sine.getAmplitude();
             }
@@ -99,6 +101,8 @@ public class SiriWaveView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         for(Sine sine : mSines){
+            if(!sine.isShown())
+                continue;
             sine.getPaint().setColor(sine.getWaveColor());
             canvas.drawPath(sine.getPath(), sine.getPaint());
             updatePath(sine);

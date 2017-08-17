@@ -8,6 +8,12 @@ public class SettingsModel {
     public static final String KEY = "settings";
     int firstColor = android.R.color.holo_red_dark;
     int secondColor = android.R.color.holo_green_dark;
+    int thirdColor = android.R.color.holo_blue_dark;
+
+    boolean showFirst = true;
+    boolean showSecond = true;
+    boolean showThird = true;
+
 
     public void setThirdColor(int thirdColor) {
         this.thirdColor = thirdColor;
@@ -33,9 +39,6 @@ public class SettingsModel {
         this.showThird = showThird;
     }
 
-    int thirdColor = android.R.color.black;
-    boolean showFirst = true;
-    boolean showSecond = true;
 
     public boolean isShowThird() {
         return showThird;
@@ -61,7 +64,6 @@ public class SettingsModel {
         return showSecond;
     }
 
-    boolean showThird = true;
 
 
 }

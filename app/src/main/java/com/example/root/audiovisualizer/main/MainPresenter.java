@@ -52,6 +52,8 @@ public class MainPresenter implements MainContractor.Presenter{
     public void getSettings() {
         SettingsModel settingsModel =
                 Preferences.getInstance(view.getContext()).getSavedItem(SettingsModel.KEY, SettingsModel.class);
+        if(settingsModel == null)
+            settingsModel = new SettingsModel(); // the default settings
         view.applySettings(settingsModel);
         view.updateView();
     }

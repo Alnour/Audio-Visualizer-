@@ -41,6 +41,12 @@ public class SettingsActivity extends AppCompatActivity implements SettingsContr
         fillTextSpinner(options, binding.thirdColor);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        presenter.getSettings();
+    }
+
     private void setEventListeners() {
         binding.save.setOnClickListener(view ->{
             presenter.saveSettings();

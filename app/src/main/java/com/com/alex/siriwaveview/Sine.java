@@ -8,6 +8,25 @@ import android.graphics.Path;
  */
 public class Sine {
     private float frequency;
+    private boolean isShown = true;
+    private float amplitude;
+    private int waveColor;
+    private Path path;
+    public float phase;
+
+
+
+
+    public void setShown(boolean shown) {
+        isShown = shown;
+    }
+
+    public boolean isShown() {
+        return isShown;
+    }
+
+
+
 
     public void setAmplitude(float amplitude) {
         this.amplitude = amplitude;
@@ -17,9 +36,12 @@ public class Sine {
         this.frequency = frequency;
     }
 
-    private float amplitude;
-    private int waveColor;
-    private Path path;
+
+    public void setWaveColor(int waveColor) {
+        this.waveColor = waveColor;
+    }
+
+
 
     public Paint getPaint() {
         return paint;
@@ -39,7 +61,6 @@ public class Sine {
         return phase;
     }
 
-    public float phase;
 
     public float getFrequency() {
         return frequency;

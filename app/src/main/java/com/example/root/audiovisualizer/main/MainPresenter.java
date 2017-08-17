@@ -1,6 +1,9 @@
 package com.example.root.audiovisualizer.main;
 
+import com.example.root.audiovisualizer.callbacks.ResultCallback;
+import com.example.root.audiovisualizer.data.Preferences;
 import com.example.root.audiovisualizer.models.FreqAmp;
+import com.example.root.audiovisualizer.models.SettingsModel;
 
 import java.util.List;
 
@@ -14,6 +17,7 @@ public class MainPresenter implements MainContractor.Presenter{
 
 
     RecordingService recordingService;
+    private ResultCallback<List<FreqAmp>> callback;
 
 
     public MainPresenter(MainContractor.View view) {
@@ -23,19 +27,32 @@ public class MainPresenter implements MainContractor.Presenter{
 
     @Override
     public void initRecordingService() {
-        recordingService = new RecordingService((List<FreqAmp> data) -> view.showNewData(data));
+        callback = (List<FreqAmp> data) -> view.showNewData(data);
+        recordingService = new RecordingService(callback);
     }
 
     @Override
     public void openSettings() {
-
+        //save state or do any presenter job
+        view.showSettings();
     }
 
     @Override
     public void startStop() {
-        if(recordingService.isContinueRecording())
+        if(!recordingService.isContinueRecording())
             recordingService.start();
-        else
+        else {
             recordingService.end();
+            recordingService = new RecordingService(callback);
+            recordingService.start();
+        }
+    }
+
+    @Override
+    public void getSettings() {
+        SettingsModel settingsModel =
+                Preferences.getInstance(view.getContext()).getSavedItem(SettingsModel.KEY, SettingsModel.class);
+        view.applySettings(settingsModel);
+        view.updateView();
     }
 }

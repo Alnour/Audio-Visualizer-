@@ -75,6 +75,11 @@ public class RecordingService extends AsyncTask<Void, Double, Void> {
             }
             Double[] res = FFTbase.fft(real, img, true);
             this.publishProgress(res);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return null;
     }
@@ -88,17 +93,17 @@ public class RecordingService extends AsyncTask<Void, Double, Void> {
 
      * */
     public List<FreqAmp> convertFre2List(Double[] freq){
-        double baseBandFreq = 1/sampleRate;
         List<FreqAmp> result = new ArrayList<>();
         int n = freq.length/2;
         Double magnitudes[] = new Double[n];
-        for(int i = 0 ; i < n; i += 2){
+        double baseBandFreq = sampleRate/n;
+        for(int i = 0 ; i < freq.length ; i += 2){
 
-            magnitudes[i] = Math.sqrt(freq[i] * freq[i] + freq[i+1] * freq[i+1]);
+            magnitudes[i/2] = Math.sqrt(freq[i] * freq[i] + freq[i+1] * freq[i+1]);
         }
         int tenPercEndIndex = (int) (0.1 * n);
-        int next30PercEndIndex = (int) (0.3*n + tenPercEndIndex);
-        int next40PercEndIndex = (int) (0.4*n + next30PercEndIndex);
+        int next30PercEndIndex = (int) (0.2*n + tenPercEndIndex);
+        int next40PercEndIndex = (int) (0.2*n + next30PercEndIndex);
         result.add(getNPercentValues(baseBandFreq, magnitudes, 0, tenPercEndIndex));
         result.add(getNPercentValues(baseBandFreq, magnitudes, tenPercEndIndex, next30PercEndIndex));
         result.add(getNPercentValues(baseBandFreq, magnitudes, next30PercEndIndex, next40PercEndIndex));

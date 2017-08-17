@@ -1,4 +1,4 @@
-# Project Title
+# Audio Visulizer
 
 Audio Visulizer for Votek Screening
 
@@ -18,12 +18,16 @@ so that it can hold different wave forms
 
 ## Code Design Concepts
 
-MVP Design Pattern is adopted in this code
-each user scenario has its own package
-which contains a contractor that links the view with presenter
-then there is a presenter class that implements the presenter interface
-and a the activity implements the view
-models are separated in their own package.
+MVP Design Pattern is adopted in this project
+each user scenario has its own package which contains a contractor that links the view with presenter.
+Then there is a presenter class that implements the presenter interface.
+Views are implemented by activites and models are separated in their own package.
+Two users stories has been added here : the main story and the settigs story.
+
+
+## Next Feature
+
+Reading streams for audio files and not recording only
 
 
 

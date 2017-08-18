@@ -44,7 +44,6 @@ public class MainPresenter implements MainContractor.Presenter{
         else {
             recordingService.end();
             recordingService = new RecordingService(callback);
-            recordingService.start();
         }
     }
 

@@ -1,6 +1,6 @@
 # Audio Visulizer
 
-Audio Visulizer for Votek Screening
+Audio Visulize
 
 ## Getting Started
 
